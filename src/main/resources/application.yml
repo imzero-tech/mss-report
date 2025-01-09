@@ -1,0 +1,46 @@
+server:
+  port: 8080
+  shutdown: graceful
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: report
+  config:
+      activate:
+        on-profile: default
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: 'jdbc:h2:mem:test'
+    username: mss
+    password: mssTest!!!
+  h2:
+    console:
+      enabled: true
+      path: /h2-consolea
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        show_sql: true
+# warmup ?? ??
+#    defer-datasource-initialization: true
+#  sql:
+#    init:
+#      data-locations: report.insert.sql
+#      schema-locations: report.schema.sql
+
+
+
+
