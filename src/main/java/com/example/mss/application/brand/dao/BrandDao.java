@@ -11,6 +11,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface BrandDao extends JpaRepository<Brand, Long> {
-
-    Brand save(Brand brand);
 }

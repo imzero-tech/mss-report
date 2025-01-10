@@ -1,15 +1,12 @@
 package com.example.mss.application.category.entity;
 
 import com.example.mss.application.common.dto.Status;
-import com.example.mss.application.product.entity.Products;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * packageName  : com.example.mss.application.category.entity
@@ -37,6 +34,8 @@ public class Category implements Serializable {
     private Long categoryId;
     @Column
     private String categoryName;
+    @Column
+    private String categoryDesc;
     @Enumerated(EnumType.STRING)
     private Status stauts;
     @Column
@@ -54,9 +53,9 @@ public class Category implements Serializable {
         updDt = Instant.now();
     }
 
-    /**
-     * 조인 관계 설정
-     */
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Products> Products = new ArrayList<>();
+//    /**
+//     * 조인 관계 설정
+//     */
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//    private List<Products> Products = new ArrayList<>();
 }

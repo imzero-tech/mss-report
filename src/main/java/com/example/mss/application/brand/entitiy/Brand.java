@@ -1,16 +1,12 @@
 package com.example.mss.application.brand.entitiy;
 
 import com.example.mss.application.common.dto.Status;
-import com.example.mss.application.company.entity.Company;
-import com.example.mss.application.product.entity.Products;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * packageName  : com.example.mss.application.brand.entitiy
@@ -57,13 +53,13 @@ public class Brand implements Serializable {
         updDt = Instant.now();
     }
 
-    /**
-     * 조인 관계 설정
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brand_companyId")
-    private Company company;
-
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
-    private List<Products> products = new ArrayList<>();
+//    /**
+//     * 조인 관계 설정
+//     */
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "brand_companyId")
+//    private Company company;
+//
+//    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+//    private List<Products> products = new ArrayList<>();
 }

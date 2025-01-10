@@ -22,18 +22,14 @@ public class CompanyService {
     private final CompanyDao companyDao;
     private final ModelMapper modelMapper;
 
-    public List<CompanyDto> saveCompanies(List<CompanyDto> companyDtos) {
+    public List<CompanyDto> saveInitCompanies(List<CompanyDto> companyDtos) {
         return companyDao
                 .saveAll(
                     companyDtos.stream()
-                            .map(o -> Company.builder()
-                                        .companyName(o.getCompanyName())
-                                        .stauts(o.getStauts())
-                                        .build())
+                            .map(o -> modelMapper.map(o, Company.class))
                             .toList())
                 .stream()
                 .map(dest -> modelMapper.map(dest, CompanyDto.class))
                 .toList();
     }
-
 }

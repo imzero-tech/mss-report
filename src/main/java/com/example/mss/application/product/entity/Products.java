@@ -1,7 +1,5 @@
 package com.example.mss.application.product.entity;
 
-import com.example.mss.application.brand.entitiy.Brand;
-import com.example.mss.application.category.entity.Category;
 import com.example.mss.application.common.dto.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -60,14 +58,14 @@ public class Products implements Serializable {
         updDt = Instant.now();
     }
 
-    /**
-     * 조인 관계 설정
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "products_categoryId")
-    private Category category;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "products_brandId")
-    private Brand brand;
+//    /**
+//     * 조인 관계 설정
+//     */
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "products_categoryId")
+//    private Category category;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "products_brandId")
+//    private Brand brand;
 }

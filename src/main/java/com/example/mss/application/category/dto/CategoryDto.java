@@ -20,6 +20,7 @@ import java.time.Instant;
 public class CategoryDto {
     private Long categoryId;
     private String categoryName;
+    private String categoryDesc;
     private Status stauts;
     private Instant crtDt;
     private Instant updDt;

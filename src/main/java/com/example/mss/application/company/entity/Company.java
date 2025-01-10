@@ -1,6 +1,5 @@
 package com.example.mss.application.company.entity;
 
-import com.example.mss.application.brand.entitiy.Brand;
 import com.example.mss.application.common.dto.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,8 +7,6 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * packageName  : com.example.mss.application.company.entity
@@ -54,9 +51,9 @@ public class Company implements Serializable {
     }
 
 
-    /**
-     * 조인 관계 설정
-     */
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private List<Brand> brands = new ArrayList<>();
+//    /**
+//     * 조인 관계 설정
+//     */
+//    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+//    private List<Brand> brands = new ArrayList<>();
 }
