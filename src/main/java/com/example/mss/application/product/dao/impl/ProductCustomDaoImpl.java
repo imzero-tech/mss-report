@@ -1,10 +1,12 @@
 package com.example.mss.application.product.dao.impl;
 
 import com.example.mss.application.brand.entitiy.QBrand;
+import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.product.dao.ProductCustomDao;
 import com.example.mss.application.product.entity.Products;
 import com.example.mss.application.product.entity.QProducts;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.example.mss.application.brand.entitiy.QBrand.brand;
 import static com.example.mss.application.product.entity.QProducts.products;
@@ -89,5 +92,49 @@ public class ProductCustomDaoImpl implements ProductCustomDao {
                 .where(products.brandId.in(lowestPriceBrandId()))
                 .orderBy(products.categoryId.asc())
                 .fetch();
+    }
+
+    private List<Tuple> findBrandMinFetchJoin(CategoryDto categoryDto) {
+        return jpaQueryFactory
+                .select(
+                        Expressions.asString("min"),
+                        brand.brandName,
+                        products.price
+                )
+                .from(products)
+                .leftJoin(brand).on(products.brandId.eq(brand.brandId))
+                .where(products.categoryId.eq(categoryDto.getCategoryId())
+                        .and(products.price.eq(
+                                JPAExpressions.select(products.price.min())
+                                        .from(products)
+                                        .where(products.categoryId.eq(categoryDto.getCategoryId()))
+                                        .groupBy(products.categoryId))))
+                .fetch();
+    }
+
+    private List<Tuple> findBrandMaxFetchJoin(CategoryDto categoryDto) {
+        return jpaQueryFactory
+                .select(
+                        Expressions.asString("max"),
+                        brand.brandName,
+                        products.price
+                )
+                .from(products)
+                .leftJoin(brand).on(products.brandId.eq(brand.brandId))
+                .where(products.categoryId.eq(categoryDto.getCategoryId())
+                        .and(products.price.eq(
+                                JPAExpressions.select(products.price.max())
+                                        .from(products)
+                                        .where(products.categoryId.eq(categoryDto.getCategoryId()))
+                                        .groupBy(products.categoryId))))
+                .fetch();
+    }
+
+    @Override
+    public List<Tuple> findBrandMinMaxFetchJoin(CategoryDto categoryDto) {
+        List<Tuple> minResults = findBrandMinFetchJoin(categoryDto);
+        List<Tuple> maxResults = findBrandMaxFetchJoin(categoryDto);
+
+        return Stream.concat(maxResults.stream(), minResults.stream()).toList();
     }
 }

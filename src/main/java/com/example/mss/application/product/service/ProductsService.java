@@ -1,8 +1,10 @@
 package com.example.mss.application.product.service;
 
+import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.common.dto.Constants;
 import com.example.mss.application.product.dao.ProductsDao;
 import com.example.mss.application.product.dto.ProductLowPrice;
+import com.example.mss.application.product.dto.ProductMinMaxPrice;
 import com.example.mss.application.product.dto.ProductsDto;
 import com.example.mss.application.product.entity.Products;
 import com.querydsl.core.Tuple;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * packageName  : com.example.mss.application.product.service
@@ -52,11 +55,11 @@ public class ProductsService {
                 .toList();
     }
 
-    public List<ProductLowPrice> lowestPriceList() {
+    public Map<String, Object> lowestPriceList() {
         List<Tuple> tuples = productsDao.findAllMinPriceFetchJoin();
         log.info("allMinPriceLeftFetchJoin: {}", tuples);
 
-        return tuples.stream()
+        var lowPriceList = tuples.stream()
                 .map(o -> ProductLowPrice.builder()
                         .productId(o.get(0, Long.class))
                         .productName(o.get(1, String.class))
@@ -64,17 +67,47 @@ public class ProductsService {
                         .price(o.get(3, Integer.class))
                         .build())
                 .toList();
+
+        double lowPriceListSum = lowPriceList.stream().mapToDouble(ProductLowPrice::getPrice).sum();
+
+        return Map.of("value", lowPriceList, "total", (int) lowPriceListSum);
     }
 
-    public List<ProductLowPrice> brandLowestPriceList() {
+    public Map<String, Object> brandLowestPriceList() {
         List<Tuple> tuples = productsDao.findBrandMinPriceFetchJoin();
 
-        return tuples.stream()
+        var brandLowPriceList = tuples.stream()
                 .map(o -> ProductLowPrice.builder()
                         .price(o.get(0, Integer.class))
                         .productName(o.get(1, String.class))
                         .brandName(o.get(2,String.class))
                         .build())
                 .toList();
+
+        double brandLowPriceListSum = brandLowPriceList.stream().mapToDouble(ProductLowPrice::getPrice).sum();
+
+        return Map.of("brand", brandLowPriceList.stream().map(ProductLowPrice::getBrandName).findFirst().orElse("")
+                , "category", brandLowPriceList.stream()
+                                                    .map(product -> Map.of(
+                                                            "productNm", product.getProductName(),
+                                                            "price", product.getPrice()))
+                                                    .toList()
+                , "total", (int) brandLowPriceListSum);
+    }
+
+    public Map<String, Object> brandMinMaxPriceList(CategoryDto categoryDto) {
+        List<Tuple> tuples = productsDao.findBrandMinMaxFetchJoin(categoryDto);
+
+        var productMinMaxPrices = tuples.stream()
+                .map(o -> ProductMinMaxPrice.builder()
+                        .minMax(o.get(0, String.class))
+                        .brandName(o.get(1, String.class))
+                        .price(o.get(2,Integer.class))
+                        .build())
+                .toList();
+
+        return Map.of("category", categoryDto.getCategoryDesc()
+                ,"min-price", productMinMaxPrices.stream().filter(o -> o.getMinMax().equals("min")).findFirst().map(o -> Map.of("brand", o.getBrandName(), "price", o.getPrice()))
+                ,"max-price", productMinMaxPrices.stream().filter(o -> o.getMinMax().equals("max")).findFirst().map(o -> Map.of("brand", o.getBrandName(), "price", o.getPrice())));
     }
 }

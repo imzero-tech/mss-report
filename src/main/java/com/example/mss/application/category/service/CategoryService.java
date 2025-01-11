@@ -38,14 +38,12 @@ public class CategoryService {
         if (!Constants.INIT_PROFILE_TEST.getCode().equals(onProfile))
             return null;
 
-        var l = categoryDtos.stream()
-                .map(o -> modelMapper.map(o, Category.class))
-                .toList();
-        log.info(">>l:{}", l);
         // saveAll : 하나의 connection 으로 다수의 dml 질의
         // ㄴ. insert bulk가 효과적
         return categoryDao
-                .saveAll(l)
+                .saveAll(categoryDtos.stream()
+                        .map(o -> modelMapper.map(o, Category.class))
+                        .toList())
                 .stream()
                 .map(dest -> modelMapper.map(dest, CategoryDto.class))
                 .toList();
@@ -53,6 +51,13 @@ public class CategoryService {
 
     public List<CategoryDto> getCategoriesByStatus(Status status) {
         return categoryDao.findCategoriesByStatus(status)
+                .stream()
+                .map(dest -> modelMapper.map(dest, CategoryDto.class))
+                .toList();
+    }
+
+    public List<CategoryDto> getCategoriesByCategoryDesc(String categoryDesc) {
+        return categoryDao.findCategoriesByCategoryDesc(categoryDesc)
                 .stream()
                 .map(dest -> modelMapper.map(dest, CategoryDto.class))
                 .toList();

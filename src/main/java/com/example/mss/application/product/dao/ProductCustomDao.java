@@ -1,5 +1,6 @@
 package com.example.mss.application.product.dao;
 
+import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.product.entity.Products;
 import com.querydsl.core.Tuple;
 
@@ -22,4 +23,6 @@ public interface ProductCustomDao {
     List<Tuple> findAllMinPriceFetchJoin();
 
     List<Tuple> findBrandMinPriceFetchJoin();
+
+    List<Tuple> findBrandMinMaxFetchJoin(CategoryDto categoryDto);
 }

@@ -21,7 +21,7 @@ public class ResponseBase<T> {
     public static <T> ResponseBase<T> of(RETURN_TP code, T data) {
         ResponseBase<T> response = new ResponseBase();
         response.setCode(code);
-        response.setMessage("");
+        response.setMessage(code.getMessage());
         response.setData(data);
         return response;
     }
