@@ -32,17 +32,6 @@ public class ProductCustomDaoImpl implements ProductCustomDao {
                 .fetchOne();
     }
 
-    /*
-    select
-p1.category_id, p1.product_name, b1.brand_name, p1.price
-from products as p1
-inner join (
-select category_id, min(price) as min_price from products group by category_id
-) as p2 on p1.category_id = p2.category_id and p1.price = p2.min_price
-left join brand as b1
-on p1.brand_id = b1.brand_id
-order by p1.category_id
-     */
     @Override
     public List<Tuple> findAllMinPriceLeftFetchJoin() {
         QProducts product = QProducts.products; // 기존에 생성된 Q 타입 사용
