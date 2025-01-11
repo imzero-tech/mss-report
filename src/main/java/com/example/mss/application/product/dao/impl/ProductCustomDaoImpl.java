@@ -5,6 +5,7 @@ import com.example.mss.application.product.dao.ProductCustomDao;
 import com.example.mss.application.product.entity.Products;
 import com.example.mss.application.product.entity.QProducts;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.example.mss.application.brand.entitiy.QBrand.brand;
 import static com.example.mss.application.product.entity.QProducts.products;
 
 /**
@@ -40,7 +42,7 @@ public class ProductCustomDaoImpl implements ProductCustomDao {
     }
 
     @Override
-    public List<Tuple> findAllMinPriceLeftFetchJoin() {
+    public List<Tuple> findAllMinPriceFetchJoin() {
         QProducts product = QProducts.products; // 기존에 생성된 Q 타입 사용
         QProducts subProduct = new QProducts("subProduct");
         QBrand brand = QBrand.brand; // QBrand 타입도 정의되었다고 가정
@@ -60,5 +62,32 @@ public class ProductCustomDaoImpl implements ProductCustomDao {
                 .fetch();
     }
 
+    private List<Long> lowestPriceBrandId() {
+        QProducts subProduct = new QProducts("subProduct");
+        NumberExpression<Integer> sumPrice = subProduct.price.sum();
+        return jpaQueryFactory
+                .select(subProduct.brandId)
+                .from(subProduct)
+                .groupBy(subProduct.brandId)
+                .orderBy(sumPrice.asc())
+                .limit(1)
+                .fetch();
+    }
 
+    @Override
+    public List<Tuple> findBrandMinPriceFetchJoin() {
+        return jpaQueryFactory
+                .select(
+                        products.price,
+                        products.productName,
+                        JPAExpressions
+                                .select(brand.brandName)
+                                .from(brand)
+                                .where(brand.brandId.eq(products.brandId))
+                )
+                .from(products)
+                .where(products.brandId.in(lowestPriceBrandId()))
+                .orderBy(products.categoryId.asc())
+                .fetch();
+    }
 }

@@ -53,7 +53,7 @@ public class ProductsService {
     }
 
     public List<ProductLowPrice> lowestPriceList() {
-        List<Tuple> tuples = productsDao.findAllMinPriceLeftFetchJoin();
+        List<Tuple> tuples = productsDao.findAllMinPriceFetchJoin();
         log.info("allMinPriceLeftFetchJoin: {}", tuples);
 
         return tuples.stream()
@@ -62,6 +62,18 @@ public class ProductsService {
                         .productName(o.get(1, String.class))
                         .brandName(o.get(2,String.class))
                         .price(o.get(3, Integer.class))
+                        .build())
+                .toList();
+    }
+
+    public List<ProductLowPrice> brandLowestPriceList() {
+        List<Tuple> tuples = productsDao.findBrandMinPriceFetchJoin();
+
+        return tuples.stream()
+                .map(o -> ProductLowPrice.builder()
+                        .price(o.get(0, Integer.class))
+                        .productName(o.get(1, String.class))
+                        .brandName(o.get(2,String.class))
                         .build())
                 .toList();
     }

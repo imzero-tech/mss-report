@@ -19,5 +19,7 @@ import java.util.List;
 public interface ProductCustomDao {
     Products findAllLeftFetchJoin(Long productId);
 
-    List<Tuple> findAllMinPriceLeftFetchJoin();
+    List<Tuple> findAllMinPriceFetchJoin();
+
+    List<Tuple> findBrandMinPriceFetchJoin();
 }
