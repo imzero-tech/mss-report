@@ -8,9 +8,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Project : mss
- * Create by NWZ-zero on 2025. 1. 9.
- * Git : https://git.nwz.kr
+ * packageName  : com.example.mss.application.brand.dao
+ * fileName     : BrandDao
+ * auther       : zero
+ * date         : 2025. 1. 9.
+ * descriptuon  :
+ * =======================================================
+ * DATE         AUTHER              NOTE
+ * -------------------------------------------------------
+ * 2025. 1. 9.      zero             최초생성
  */
 @Repository
 public interface BrandDao extends JpaRepository<Brand, Long> {

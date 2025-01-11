@@ -144,7 +144,7 @@ public class PreLoadService {
                     return innerMap.entrySet().stream()
                             .map(innerEntry -> ProductsDto.builder()
                                     .productName(innerEntry.getKey())
-                                    .brandId(first.get().getBrandId())
+                                    .brandId(first.isPresent()?first.get().getBrandId():-1L)
                                     .categoryId(categories.stream().filter(o -> o.getCategoryDesc().equals(innerEntry.getKey())).map(CategoryDto::getCategoryId).findFirst().orElse(-1L))
                                     .price(innerEntry.getValue())
                                     .status(Status.OK)

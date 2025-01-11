@@ -9,9 +9,15 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /**
- * Project : mss
- * Create by NWZ-zero on 2025. 1. 9.
- * Git : https://git.nwz.kr
+ * packageName  : com.example.mss.application.category.dto
+ * fileName     : CategoryDto
+ * auther       : zero
+ * date         : 2025. 1. 9.
+ * descriptuon  :
+ * =======================================================
+ * DATE         AUTHER              NOTE
+ * -------------------------------------------------------
+ * 2025. 1. 9.      zero             최초생성
  */
 @Builder
 @Data

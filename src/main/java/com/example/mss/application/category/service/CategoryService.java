@@ -14,9 +14,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Project : mss
- * Create by NWZ-zero on 2025. 1. 10.
- * Git : https://git.nwz.kr
+ * packageName  : com.example.mss.application.category.service
+ * fileName     : CategoryService
+ * auther       : zero
+ * date         : 2025. 1. 10.
+ * descriptuon  :
+ * =======================================================
+ * DATE         AUTHER              NOTE
+ * -------------------------------------------------------
+ * 2025. 1. 10.      zero             최초생성
  */
 @Slf4j
 @RequiredArgsConstructor
