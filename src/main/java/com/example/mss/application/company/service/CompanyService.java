@@ -11,9 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Project : mss
- * Create by NWZ-zero on 2025. 1. 9.
- * Git : https://git.nwz.kr
+ * packageName  : com.example.mss.application.company.service
+ * fileName     : CompanyService
+ * auther       : imzero-tech
+ * date         : 2025. 1. 9.
+ * descriptuon  :
+ * =======================================================
+ * DATE         AUTHER              NOTE
+ * -------------------------------------------------------
+ * 2025. 1. 9.      imzero-tech             최초생성
  */
 @Slf4j
 @RequiredArgsConstructor

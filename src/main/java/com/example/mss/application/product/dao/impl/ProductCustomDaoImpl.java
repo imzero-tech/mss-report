@@ -15,9 +15,16 @@ import java.util.List;
 import static com.example.mss.application.product.entity.QProducts.products;
 
 /**
- * Project : mss
- * Create by NWZ-zero on 2025. 1. 9.
- * Git : https://git.nwz.kr
+ * packageName  : com.example.mss.application.product.dao.impl
+ * fileName     : ProductCustomDaoImpl
+ * auther       : imzero-tech
+ * date         : 2025. 1. 9.
+ * descriptuon  :
+ * =======================================================
+ * DATE         AUTHER              NOTE
+ * -------------------------------------------------------
+ * 2025. 1. 11.     imzero-tech             add findAllMinPriceLeftFetchJoin
+ * 2025. 1. 9.      imzero-tech             최초생성
  */
 @Repository
 @RequiredArgsConstructor

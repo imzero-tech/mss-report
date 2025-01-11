@@ -8,19 +8,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Project : mss
- * Create by NWZ-zero on 2025. 1. 9.
- * Git : https://git.nwz.kr
+ * packageName  : com.example.mss.configuration.persistence
+ * fileName     : HibernateQueryDslConfiguration
+ * auther       : imzero-tech
+ * date         : 2025. 1. 9.
+ * descriptuon  :
+ * =======================================================
+ * DATE         AUTHER              NOTE
+ * -------------------------------------------------------
+ * 2025. 1. 9.      imzero-tech             최초생성
  */
 @Slf4j
 @Configuration
-//@RequiredArgsConstructor
-//@EnableJpaRepositories(
-//        basePackageClasses = WebMvcConfiguration.class,
-//        entityManagerFactoryRef = "entityManagerFactoryHibernate",
-//        transactionManagerRef = "transactionManagerHibernate",
-//        includeFilters = @ComponentScan.Filter(classes = {QueryDslHybernate.class})
-//)
 public class HibernateQueryDslConfiguration {
 
     @PersistenceContext

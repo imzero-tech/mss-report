@@ -3,9 +3,15 @@ package com.example.mss.application.common.dto;
 import lombok.Getter;
 
 /**
- * Project : mss
- * Create by NWZ-zero on 2025. 1. 10.
- * Git : https://git.nwz.kr
+ * packageName  : com.example.mss.application.company.dao
+ * fileName     : Constants
+ * auther       : imzero-tech
+ * date         : 2025. 1. 8.
+ * descriptuon  :
+ * =======================================================
+ * DATE         AUTHER              NOTE
+ * -------------------------------------------------------
+ * 2025. 1. 8.      imzero-tech             최초생성
  */
 @Getter
 public enum Constants {
