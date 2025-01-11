@@ -37,8 +37,8 @@ public class Brand implements Serializable {
     @Column
     private Long companyId;
     @Enumerated(EnumType.STRING)
-    private Status stauts;
-    @Column
+    private Status status;
+    @Column(updatable = false)
     private Instant crtDt;
     @Column
     private Instant updDt;

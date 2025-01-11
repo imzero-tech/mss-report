@@ -37,8 +37,8 @@ public class Category implements Serializable {
     @Column
     private String categoryDesc;
     @Enumerated(EnumType.STRING)
-    private Status stauts;
-    @Column
+    private Status status;
+    @Column(updatable = false)
     private Instant crtDt;
     @Column
     private Instant updDt;

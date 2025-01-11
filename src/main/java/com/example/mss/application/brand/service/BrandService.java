@@ -4,6 +4,7 @@ import com.example.mss.application.brand.dao.BrandDao;
 import com.example.mss.application.brand.dto.BrandDto;
 import com.example.mss.application.brand.entitiy.Brand;
 import com.example.mss.application.common.dto.Constants;
+import com.example.mss.application.common.dto.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -37,6 +38,13 @@ public class BrandService {
                         brandDtos.stream()
                                 .map(o -> modelMapper.map(o, Brand.class))
                                 .toList())
+                .stream()
+                .map(dest -> modelMapper.map(dest, BrandDto.class))
+                .toList();
+    }
+
+    public List<BrandDto> getBrandByStatus(Status status) {
+        return brandDao.findByStatus(status)
                 .stream()
                 .map(dest -> modelMapper.map(dest, BrandDto.class))
                 .toList();

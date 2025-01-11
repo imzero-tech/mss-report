@@ -20,7 +20,7 @@ spring:
     driver-class-name: org.h2.Driver
     url: 'jdbc:h2:mem:test'
     username: mss
-    password: mssTest!!!
+    password: mss
   h2:
     console:
       enabled: true

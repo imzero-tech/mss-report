@@ -4,6 +4,7 @@ import com.example.mss.application.category.dao.CategoryDao;
 import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.category.entity.Category;
 import com.example.mss.application.common.dto.Constants;
+import com.example.mss.application.common.dto.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -31,13 +32,21 @@ public class CategoryService {
         if (!Constants.INIT_PROFILE_TEST.getCode().equals(onProfile))
             return null;
 
+        var l = categoryDtos.stream()
+                .map(o -> modelMapper.map(o, Category.class))
+                .toList();
+        log.info(">>l:{}", l);
         // saveAll : 하나의 connection 으로 다수의 dml 질의
         // ㄴ. insert bulk가 효과적
         return categoryDao
-                .saveAll(
-                        categoryDtos.stream()
-                                .map(o -> modelMapper.map(o, Category.class))
-                                .toList())
+                .saveAll(l)
+                .stream()
+                .map(dest -> modelMapper.map(dest, CategoryDto.class))
+                .toList();
+    }
+
+    public List<CategoryDto> getCategoriesByStatus(Status status) {
+        return categoryDao.findCategoriesByStatus(status)
                 .stream()
                 .map(dest -> modelMapper.map(dest, CategoryDto.class))
                 .toList();

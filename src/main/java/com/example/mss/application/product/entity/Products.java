@@ -34,16 +34,16 @@ public class Products implements Serializable {
     @Column
     private String productName;
     @Column
-    private Integer categoryId;
+    private Long categoryId;
     @Column
-    private Integer brandId;
+    private Long brandId;
     @Column
     private Integer price;
     @Column
     private Integer salePrice;
     @Enumerated(EnumType.STRING)
-    private Status stauts;
-    @Column
+    private Status status;
+    @Column(updatable = false)
     private Instant crtDt;
     @Column
     private Instant updDt;

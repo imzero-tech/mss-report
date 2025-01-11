@@ -20,11 +20,11 @@ import java.time.Instant;
 public class ProductsDto {
     private Long productId;
     private String productName;
-    private Integer categoryId;
-    private Integer brandId;
+    private Long categoryId;
+    private Long brandId;
     private Integer price;
     private Integer salePrice;
-    private Status stauts;
+    private Status status;
     private Instant crtDt;
     private Instant updDt;
 }

@@ -5,9 +5,12 @@ import com.example.mss.application.brand.service.BrandService;
 import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.category.service.CategoryService;
 import com.example.mss.application.common.dto.Constants;
+import com.example.mss.application.common.dto.InitUtil;
 import com.example.mss.application.common.dto.Status;
 import com.example.mss.application.company.dto.CompanyDto;
 import com.example.mss.application.company.service.CompanyService;
+import com.example.mss.application.product.dto.ProductsDto;
+import com.example.mss.application.product.service.ProductsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 /**
@@ -33,12 +37,13 @@ import java.util.stream.IntStream;
 @Service
 public class PreLoadService {
 
-    private final CategoryService categoryService;
     @Value("${spring.config.activate.on-profile:default}")
     private String onProfile;
 
     private final CompanyService companyService;
     private final BrandService brandService;
+    private final CategoryService categoryService;
+    private final ProductsService productsService;
 
     public void preLoad() {
         log.info("******************************************************");
@@ -55,6 +60,9 @@ public class PreLoadService {
 
             // 카테고리 데이타 등록
             initCategories();
+
+            // 상품 데이타 등록
+            initProducts();
         }
     }
 
@@ -64,7 +72,7 @@ public class PreLoadService {
                 List.of(CompanyDto.builder()
                             .companyId(1L)
                             .companyName("Musinsa")
-                            .stauts(Status.OK)
+                            .status(Status.OK)
                             .build()));
     }
 
@@ -81,10 +89,10 @@ public class PreLoadService {
                                 BrandDto.builder()
                                         .brandName(String.valueOf(brandNm))
                                         .companyId(1L)
-                                        .stauts(Status.OK)
+                                        .status(Status.OK)
                                         .build())
                             .toList();
-        log.info("[brandDtos] : [{}]", brandDtos);
+
         brandService.saveInitBrands(brandDtos);
     }
 
@@ -100,6 +108,7 @@ public class PreLoadService {
                 , 8L, Map.of("accessories", "액세서리")
         );
         List<CategoryDto> categoryDtos = categories.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
                 .flatMap(entry -> {
                     Long id = entry.getKey();  // 키 (숫자 ID)
                     Map<String, String> innerMap = entry.getValue();  // 내부 맵
@@ -109,11 +118,42 @@ public class PreLoadService {
                                     .categoryId(id)
                                     .categoryName(innerEntry.getKey())
                                     .categoryDesc(innerEntry.getValue())
-                                    .stauts(Status.OK)
+                                    .status(Status.OK)
+                                    .build());
+                })
+                .toList();
+        log.info(">>>>>categoryDtos :[{}]", categoryDtos);
+        categoryService.saveInitCategories(categoryDtos);
+    }
+
+    private void initProducts() {
+        var productData = InitUtil.productMap();
+
+        // 브렌드 정보 가져오기
+        var brands = brandService.getBrandByStatus(Status.OK);
+
+        // 카테고리 정보 가져오기
+        var categories = categoryService.getCategoriesByStatus(Status.OK);
+
+        List<ProductsDto> productsDtos = productData.entrySet().stream()
+                .flatMap(entry -> {
+                    String brandNm = entry.getKey();
+                    Optional<BrandDto> first = brands.stream().filter(o -> o.getBrandName().equals(brandNm)).findFirst();
+
+                    Map<String, Integer> innerMap = entry.getValue();
+                    return innerMap.entrySet().stream()
+                            .map(innerEntry -> ProductsDto.builder()
+                                    .productName(innerEntry.getKey())
+                                    .brandId(first.get().getBrandId())
+                                    .categoryId(categories.stream().filter(o -> o.getCategoryDesc().equals(innerEntry.getKey())).map(CategoryDto::getCategoryId).findFirst().orElse(-1L))
+                                    .price(innerEntry.getValue())
+                                    .status(Status.OK)
                                     .build());
                 })
                 .toList();
 
-        categoryService.saveInitCategories(categoryDtos);
+        productsService.saveInitProducts(productsDtos);
+
+        log.info(">> productsDts:[{}]", productsDtos);
     }
 }

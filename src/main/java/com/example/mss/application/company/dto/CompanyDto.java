@@ -20,7 +20,7 @@ import java.time.Instant;
 public class CompanyDto {
     private Long companyId;
     private String companyName;
-    private Status stauts;
+    private Status status;
     private Instant crtDt;
     private Instant updDt;
 }
