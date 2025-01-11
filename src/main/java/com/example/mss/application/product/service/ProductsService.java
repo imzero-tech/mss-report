@@ -2,8 +2,10 @@ package com.example.mss.application.product.service;
 
 import com.example.mss.application.common.dto.Constants;
 import com.example.mss.application.product.dao.ProductsDao;
+import com.example.mss.application.product.dto.ProductLowPrice;
 import com.example.mss.application.product.dto.ProductsDto;
 import com.example.mss.application.product.entity.Products;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -47,6 +49,20 @@ public class ProductsService {
                                 .toList())
                 .stream()
                 .map(dest -> modelMapper.map(dest, ProductsDto.class))
+                .toList();
+    }
+
+    public List<ProductLowPrice> lowestPriceList() {
+        List<Tuple> tuples = productsDao.findAllMinPriceLeftFetchJoin();
+        log.info("allMinPriceLeftFetchJoin: {}", tuples);
+
+        return tuples.stream()
+                .map(o -> ProductLowPrice.builder()
+                        .productId(o.get(0, Long.class))
+                        .productName(o.get(1, String.class))
+                        .brandName(o.get(2,String.class))
+                        .price(o.get(3, Integer.class))
+                        .build())
                 .toList();
     }
 }

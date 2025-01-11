@@ -1,6 +1,9 @@
 package com.example.mss.application.product.dao;
 
 import com.example.mss.application.product.entity.Products;
+import com.querydsl.core.Tuple;
+
+import java.util.List;
 
 /**
  * Project : mss
@@ -8,5 +11,7 @@ import com.example.mss.application.product.entity.Products;
  * Git : https://git.nwz.kr
  */
 public interface ProductCustomDao {
-    Products findAllLeftFetchJoein(Long productId);
+    Products findAllLeftFetchJoin(Long productId);
+
+    List<Tuple> findAllMinPriceLeftFetchJoin();
 }
