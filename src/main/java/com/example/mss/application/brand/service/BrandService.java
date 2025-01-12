@@ -6,7 +6,6 @@ import com.example.mss.application.brand.entitiy.Brand;
 import com.example.mss.application.common.dto.Constants;
 import com.example.mss.application.common.dto.Status;
 import com.example.mss.application.product.dto.CrudRequest;
-import com.example.mss.application.util.MssClassUtil;
 import com.example.mss.infrastructure.constants.RETURN_TP;
 import com.example.mss.infrastructure.entity.ResponseBase;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.example.mss.application.util.MssClassUtil.copyNonNullProperties;
 
 /**
  * packageName  : com.example.mss.application.brand.service
@@ -76,6 +77,7 @@ public class BrandService {
         return null == fBrand? null: modelMapper.map(fBrand, BrandDto.class);
     }
 
+    // CrudRequest.Brand 정보를 전달 받아 저장 한 후 ResponseBase<Object> 로 리턴
     public ResponseBase<Object> resBrandAdd(CrudRequest cRequest) {
         if (cRequest.getBrand() == null)
             return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[brand null]");
@@ -83,6 +85,7 @@ public class BrandService {
         var brandDto = BrandDto.builder()
                         .companyId(1L)
                         .brandName(cRequest.getBrand().getBrandName())
+                        .status(Status.OK)
                         .build();
         try {
             var sBrandDto = this.saveItem(brandDto);
@@ -92,14 +95,17 @@ public class BrandService {
         }
     }
 
+    // CrudRequest.Brand 정보를 전달 받아 업데이트 한 후 ResponseBase<Object> 로 리턴
     public ResponseBase<Object> resBrandUpdate(CrudRequest cRequest) {
         if (cRequest.getBrand() == null)
             return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[brand null]");
 
+        // 요청 정보가 있는지 체크
         BrandDto fBrandDto = this.getBrandById(cRequest.getBrand().getBrandId());
         if (fBrandDto == null)
             return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[find brand empty]");
 
+        // 업데이트할 정보를 셋팅
         var nBrandDto = BrandDto.builder()
                 .brandId(cRequest.getBrand().getBrandId())
                 .companyId(1L)
@@ -107,9 +113,11 @@ public class BrandService {
                 .status(cRequest.getBrand().getStatus())
                 .build();
 
-        MssClassUtil.copyNonNullProperties(nBrandDto, fBrandDto);
+        // 업데이트할 정보를 요청 정보로 복사 - null 은 제외 처리
+        copyNonNullProperties(nBrandDto, fBrandDto);
 
         try {
+            // 업데이트된 요청 정ㅂ를 최종 업데이트
             var sBrandDto = this.saveItem(fBrandDto);
             return ResponseBase.of(RETURN_TP.OK, sBrandDto);
         } catch(Exception e) {

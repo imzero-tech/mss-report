@@ -132,26 +132,29 @@ public class ProductsService {
         return null == fProducts? null: modelMapper.map(fProducts, ProductsDto.class);
     }
 
+    // CrudRequest.ProductItem 정보를 전달 받아 저장 한 후 ResponseBase<Object> 로 리턴
     public ResponseBase<Object> resProductAdd(CrudRequest cRequest, BrandService brandService, CategoryService categoryService) {
         if (cRequest.getProduct() == null)
             return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[product null]");
 
+        // 브렌드명 카테고리명으로 정보를 조회하여 없다면 신규 등록
         var fnBrand = brandService.getBrandByName(cRequest.getProduct().getBrandName());
         var fnCategory = categoryService.getCategoriesByCategoryDesc(cRequest.getProduct().getCategoryName()).stream().findFirst().orElse(null);
 
-        if (fnBrand == null)
+        if (fnBrand == null && null != cRequest.getProduct().getBrandName())
             fnBrand = brandService.saveItem(
                         BrandDto.builder()
                                 .brandName(cRequest.getProduct().getBrandName())
                                 .companyId(1L)
                                 .build());
 
-        if (fnCategory == null)
+        if (fnCategory == null && null != cRequest.getProduct().getCategoryName())
             fnCategory = categoryService.saveItem(
                         CategoryDto.builder()
                                 .categoryDesc(cRequest.getProduct().getCategoryName())
                                 .categoryName(cRequest.getProduct().getCategoryName()).build());
 
+        // ProductItem 을 통해 얻을 수 있는 정보와 fnBrand, fnCategory 정보로 ProductsDto 생성
         var productDto = ProductsDto.builder()
                 .productId(null)
                 .productName(cRequest.getProduct().getProductName())
@@ -168,36 +171,37 @@ public class ProductsService {
         }
     }
 
+    // CrudRequest.ProductItem 정보를 전달 받아 업데이트 한 후 ResponseBase<Object> 로 리턴
     public ResponseBase<Object> resProductUpdate(CrudRequest cRequest, BrandService brandService, CategoryService categoryService) {
         if (cRequest.getProduct() == null)
             return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[product null]");
 
+        // 브렌드명 카테고리명으로 정보를 조회하여 없다면 신규 등록
         var fnBrand = brandService.getBrandByName(cRequest.getProduct().getBrandName());
         var fnCategory = categoryService.getCategoriesByCategoryDesc(cRequest.getProduct().getCategoryName()).stream().findFirst().orElse(null);
 
-        if (fnBrand == null)
+        if (fnBrand == null && null != cRequest.getProduct().getBrandName())
             fnBrand = brandService.saveItem(
                         BrandDto.builder()
                                 .brandName(cRequest.getProduct().getBrandName())
                                 .companyId(1L)
                                 .build());
 
-        if (fnCategory == null)
+        if (fnCategory == null && null != cRequest.getProduct().getCategoryName())
             fnCategory = categoryService.saveItem(
                         CategoryDto.builder()
                                 .categoryDesc(cRequest.getProduct().getCategoryName())
                                 .categoryName(cRequest.getProduct().getCategoryName()).build());
 
+        // 전달할 정보가 없다면 업데이트 조건에 부합
         if (fnBrand == null || fnCategory == null)
             return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요(브랜드/카테고리 신규등록 실패).. [" + cRequest.getProduct() + "]");
 
+        // 상품명 초기화
         var productNm = StringUtils.isEmpty(cRequest.getProduct().getProductName())?
                             fnCategory.getCategoryDesc()
                             : cRequest.getProduct().getProductName();
 
-
-
-        ProductsDto fProductDto = this.getProductsBYId(cRequest.getProduct().getProductId());
 
         Status status = null;
         try {
@@ -206,6 +210,12 @@ public class ProductsService {
             // doNothing
         }
 
+        // 요청 정보가 있는지 체크
+        ProductsDto fProductDto = this.getProductsBYId(cRequest.getProduct().getProductId());
+        if (fProductDto == null)
+            return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[find product empty]");
+
+        // 업데이트할 정보를 셋팅
         ProductsDto nProductDto = ProductsDto.builder()
                                     .productId(fProductDto.getProductId())
                                     .brandId(fnBrand.getBrandId())

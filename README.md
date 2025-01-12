@@ -69,11 +69,14 @@ api
 + http://localhost:8081/h2-console
   + jdbc:h2:mem:test 
   + ContextRefreshedEvent 시점에 초기화 데이타를 넣는 WebMvcConfiguration 설정 
+
 ### swagger-ui
 + http://localhost:8081/swagger-ui/swagger-ui/index.html
+
 ### DSL, JQPL
 + DSL 을 통해 데이타 조회/ 업데이트
 + JQPL 을 통해 데이타 벌크 업데이트
+
 ### 관리 페이지
 + http://localhost:8081/admin
 + 구현중
