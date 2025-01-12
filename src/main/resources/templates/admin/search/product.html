@@ -1,0 +1,52 @@
+{% extends "layouts/adminDefault" %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        상품 관리
+        <small>상품 정보를 관리 합니다.</small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content container-fluid">
+    <div class="row col-md-12 col-lg-10">
+        <div class="box box-primary">
+            <div class="box">
+                <div class="box-body">
+                    <!-- 등록 현황 Grid -->
+                    <table id="app-board-grid" class="display table table-bordered table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>상품명</th>
+                            <th>브랜드명</th>
+                            <th>카테고리명</th>
+                            <th>회사명</th>
+                            <th>판매가격</th>
+                            <th>수정일</th>
+                            <th>등록일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>productNm</td>
+                            <td>brandNm</td>
+                            <td>categoryNm</td>
+                            <td>companyNm</td>
+                            <td>price</td>
+                            <td>updDT</td>
+                            <td>crtDT</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

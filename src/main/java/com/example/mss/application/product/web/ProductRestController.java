@@ -13,7 +13,6 @@ import com.example.mss.infrastructure.entity.ResponseBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.util.List;
 
@@ -38,7 +37,6 @@ public class ProductRestController {
     private final ProductsService productsService;
     private final CategoryService categoryService;
     private final BrandService brandService;
-    private final ResourceHttpRequestHandler staticResourceRequestHandler;
 
     /**
      * 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API

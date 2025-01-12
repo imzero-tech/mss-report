@@ -1,0 +1,48 @@
+{% extends "layouts/adminDefault" %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        회사 관리
+        <small>회사 정보를 관리 합니다.</small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content container-fluid">
+    <div class="row col-md-12 col-lg-10">
+        <div class="box box-primary">
+            <div class="box">
+                <div class="box-body">
+                    <!-- 등록 현황 Grid -->
+                    <table id="app-board-grid" class="display table table-bordered table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>회사 명</th>
+                            <th>상태</th>
+                            <th>수정일</th>
+                            <th>등록일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>companyId</td>
+                            <td>companyNm</td>
+                            <td>status</td>
+                            <td>updDT</td>
+                            <td>crtDt</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

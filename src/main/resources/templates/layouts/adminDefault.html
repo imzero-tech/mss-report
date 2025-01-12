@@ -16,16 +16,63 @@
     {% block head %}{% endblock %}
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+        <a href="/">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>MSS</b></span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>MSS Admin </b></span>
+        </a>
+        <!-- Header Navbar -->
+        <nav class="neonbar navbar navbar-static-top" role="navigation">
 
-<div class="container-fluid">
-    <div class="row flex-xl-nowrap">
+        </nav>
+    </header>
 
-        <main class="bd-content bd-sidebar-on  role="main">
-            {# 컨텐츠 #}
-            {% block content %}{% endblock %}
-        </main>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview active">
+                    <a href="/admin/search">
+                        <span>정보조회</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li calss="active" ><a href="/admin/search/product"><i class="fa  fa-user"></i> <span>상품 조회</span></a></li>
+                        <li  ><a href="/admin/search/brand"><i class="fa  fa-user"></i> <span>브랜드 조회</span></a></li>
+                        <li  ><a href="/admin/search/category"><i class="fa fa-credit-card"></i> <span>카테고리 조회</span></a></li>
+                        <li  ><a href="/admin/search/company"><i class="fa fa-paperclip"></i> <span>회사 조회</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </aside>
 
+    <div class="content-wrapper">
+        {% block content %}
+        {% endblock %}
     </div>
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs">
+            Private  spaces want
+        </div>
+        <!-- Default to the left -->
+        <strong></strong> imzero rights reserved.
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+
+        {% include "layouts/inc/control-side" %}
+
+    </aside>
+    <div class="control-sidebar-bg"></div>
 </div>
 
 {% block script %}{% endblock %}

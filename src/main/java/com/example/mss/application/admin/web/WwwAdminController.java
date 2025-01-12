@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,6 +38,12 @@ public class WwwAdminController {
     private ModelAndView home(ModelAndView mnv) {
         mnv.setViewName("admin/index");
 
+        return mnv;
+    }
+
+    @GetMapping(value ="/search/{kind}" )
+    private ModelAndView searchView(ModelAndView mnv, @PathVariable String kind) {
+        mnv.setViewName("admin/search/" + kind);
         return mnv;
     }
 }
