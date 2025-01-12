@@ -17,6 +17,8 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.util.List;
 
+import static com.example.mss.application.util.MssClassUtil.isValidEnum;
+
 /**
  * packageName  : com.example.mss.application.product.web
  * fileName     : ProductRestController
@@ -96,15 +98,18 @@ public class ProductRestController {
             @PathVariable String task,
             @RequestBody CrudRequest cRequest) {
 
+        // crudType 항목 체크
         if (!isValidEnum(CrudCd.class, crudType))
             return ResponseBase.of(RETURN_TP.FAIL, "invalid crud type: " + crudType);
 
+        // task 항목 체크
         if (!isValidEnum(TaskCd.class, task))
             return ResponseBase.of(RETURN_TP.FAIL, "invalid task type: " + crudType);
 
         return performEntityCrud(CrudCd.valueOf(crudType), task, cRequest);
     }
 
+    // 항목에 따른 crud 작업
     private ResponseBase<Object> performEntityCrud(CrudCd crudCd, String task, CrudRequest cRequest) {
         // check crdType
         switch (crudCd) {
@@ -117,19 +122,7 @@ public class ProductRestController {
         }
     }
 
-    public static <T extends Enum<T>> boolean isValidEnum(Class<T> enumClass, String enumValue) {
-        if (enumValue == null) {
-            return false;
-        }
-
-        try {
-            Enum.valueOf(enumClass, enumValue);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-    }
-
+    // 등록
     private ResponseBase<Object> entityCrudAdd(TaskCd taskCd, CrudRequest cRequest) {
         switch (taskCd) {
             case brand -> { return brandService.resBrandAdd(cRequest); }
@@ -140,6 +133,7 @@ public class ProductRestController {
         }
     }
 
+    // 수정
     private ResponseBase<Object> entityCrudFetch(TaskCd taskCd, CrudRequest cRequest) {
         switch (taskCd) {
             case brand -> { return brandService.resBrandUpdate(cRequest); }
@@ -150,6 +144,7 @@ public class ProductRestController {
         }
     }
 
+    // 삭제
     private ResponseBase<Object> entityCrudDel(TaskCd taskCd, CrudRequest cRequest) {
         switch (taskCd) {
             case brand -> {

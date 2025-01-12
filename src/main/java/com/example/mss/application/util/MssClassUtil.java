@@ -17,6 +17,20 @@ import java.util.Arrays;
  * 2025. 1. 12.      imzero-tech             최초생성
  */
 public class MssClassUtil {
+
+    public static <T extends Enum<T>> boolean isValidEnum(Class<T> enumClass, String enumValue) {
+        if (enumValue == null) {
+            return false;
+        }
+
+        try {
+            Enum.valueOf(enumClass, enumValue);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     public static void copyNonNullProperties(Object source, Object target) {
         Arrays.stream(BeanUtils.getPropertyDescriptors(source.getClass()))
                 .forEach(propertyDescriptor -> {
