@@ -45,6 +45,7 @@ public class Category implements Serializable {
 
     @PrePersist
     protected void onCreate() {
+        status = Status.OK;
         crtDt = Instant.now();
     }
 

@@ -152,8 +152,9 @@ public class PreLoadService {
                 })
                 .toList();
 
-        productsService.saveInitProducts(productsDtos);
+        var productList = productsService.saveInitProducts(productsDtos);
 
         log.info(">> productsDts:[{}]", productsDtos);
+        log.info(">> productList:[{}]", productList);
     }
 }

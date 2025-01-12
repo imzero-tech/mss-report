@@ -50,6 +50,12 @@ public class Products implements Serializable {
 
     @PrePersist
     protected void onCreate() {
+        if (price == null)
+            price = 0;
+
+        if (salePrice == null)
+            salePrice = 0;
+
         crtDt = Instant.now();
     }
 

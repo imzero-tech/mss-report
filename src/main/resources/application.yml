@@ -41,6 +41,15 @@ spring:
 #      data-locations: report.insert.sql
 #      schema-locations: report.schema.sql
 
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
+pebble:
+  prefix: /templates/
+  suffix: .html
 
 
 

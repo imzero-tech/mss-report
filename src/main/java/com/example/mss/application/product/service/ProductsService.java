@@ -2,6 +2,7 @@ package com.example.mss.application.product.service;
 
 import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.common.dto.Constants;
+import com.example.mss.application.common.dto.Status;
 import com.example.mss.application.product.dao.ProductsDao;
 import com.example.mss.application.product.dto.ProductLowPrice;
 import com.example.mss.application.product.dto.ProductMinMaxPrice;
@@ -53,6 +54,12 @@ public class ProductsService {
                 .stream()
                 .map(dest -> modelMapper.map(dest, ProductsDto.class))
                 .toList();
+    }
+
+    public ProductsDto saveItem(ProductsDto productsDto) {
+        Products products = modelMapper.map(productsDto, Products.class);
+        Products fproducts = productsDao.saveAndFlush(products);
+        return modelMapper.map(fproducts, ProductsDto.class);
     }
 
     public Map<String, Object> lowestPriceList() {
@@ -109,5 +116,18 @@ public class ProductsService {
         return Map.of("category", categoryDto.getCategoryDesc()
                 ,"min-price", productMinMaxPrices.stream().filter(o -> o.getMinMax().equals("min")).findFirst().map(o -> Map.of("brand", o.getBrandName(), "price", o.getPrice()))
                 ,"max-price", productMinMaxPrices.stream().filter(o -> o.getMinMax().equals("max")).findFirst().map(o -> Map.of("brand", o.getBrandName(), "price", o.getPrice())));
+    }
+
+    public ProductsDto getProductsBYId(Long productsId) {
+        Products fProducts = productsDao.findByProductId(productsId);
+        return null == fProducts? null: modelMapper.map(fProducts, ProductsDto.class);
+    }
+
+    public void setProductsStatusByBrandId(Long brandId, Status status) {
+        productsDao.updateRowsByBrandId(brandId, status);
+    }
+
+    public void setProductsStatusByProductId(Long productId, Status status) {
+        productsDao.updateRowsByProductId(productId, status);
     }
 }

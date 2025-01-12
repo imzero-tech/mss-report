@@ -20,5 +20,9 @@ import java.util.List;
  */
 @Repository
 public interface BrandDao extends JpaRepository<Brand, Long> {
+    Brand findBrandByBrandId(Long brandId);
+    Brand findBrandByBrandName(String brandName);
     List<Brand> findByStatus(Status status);
+    Brand save(Brand brand);
+
 }

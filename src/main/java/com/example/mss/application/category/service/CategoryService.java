@@ -1,5 +1,7 @@
 package com.example.mss.application.category.service;
 
+import com.example.mss.application.brand.dto.BrandDto;
+import com.example.mss.application.brand.entitiy.Brand;
 import com.example.mss.application.category.dao.CategoryDao;
 import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.category.entity.Category;
@@ -47,6 +49,12 @@ public class CategoryService {
                 .stream()
                 .map(dest -> modelMapper.map(dest, CategoryDto.class))
                 .toList();
+    }
+
+    public CategoryDto saveItem(CategoryDto categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
+        Category fcategory = categoryDao.saveAndFlush(category);
+        return modelMapper.map(fcategory, CategoryDto.class);
     }
 
     public List<CategoryDto> getCategoriesByStatus(Status status) {

@@ -49,6 +49,12 @@ public class BrandService {
                 .toList();
     }
 
+    public BrandDto saveItem(BrandDto brandDto) {
+        Brand brand = modelMapper.map(brandDto, Brand.class);
+        Brand fBrand = brandDao.saveAndFlush(brand);
+        return modelMapper.map(fBrand, BrandDto.class);
+    }
+
     public List<BrandDto> getBrandByStatus(Status status) {
         return brandDao.findByStatus(status)
                 .stream()
@@ -56,4 +62,13 @@ public class BrandService {
                 .toList();
     }
 
+    public BrandDto getBrandById(Long id) {
+        Brand fBrand = brandDao.findBrandByBrandId(id);
+        return null == fBrand? null: modelMapper.map(fBrand, BrandDto.class);
+    }
+
+    public BrandDto getBrandByName(String brandName) {
+        Brand fBrand = brandDao.findBrandByBrandName(brandName);
+        return null == fBrand? null: modelMapper.map(fBrand, BrandDto.class);
+    }
 }
