@@ -1,8 +1,8 @@
-package com.example.mss.application.common.dto;
+package com.example.mss.application.product.dto;
 
 /**
- * packageName  : com.example.mss.application.common.dto
- * fileName     : Execute
+ * packageName  : com.example.mss.application.product.dto
+ * fileName     : TaskCd
  * auther       : imzero-tech
  * date         : 2025. 1. 12.
  * descriptuon  :
@@ -11,7 +11,6 @@ package com.example.mss.application.common.dto;
  * -------------------------------------------------------
  * 2025. 1. 12.      imzero-tech             최초생성
  */
-public enum CrudCd {
-    CREATE, UPDATE, DELETE,
-    add, fetch, del,
+public enum TaskCd {
+    brand, category, product
 }

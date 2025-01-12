@@ -1,27 +1,21 @@
 package com.example.mss.application.product.web;
 
-import com.example.mss.application.brand.dto.BrandDto;
 import com.example.mss.application.brand.service.BrandService;
 import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.category.service.CategoryService;
 import com.example.mss.application.common.dto.CrudCd;
 import com.example.mss.application.common.dto.Status;
-import com.example.mss.application.product.dto.ProductRequest;
-import com.example.mss.application.product.dto.ProductResponse;
-import com.example.mss.application.product.dto.ProductsDto;
+import com.example.mss.application.product.dto.CrudRequest;
+import com.example.mss.application.product.dto.TaskCd;
 import com.example.mss.application.product.service.ProductsService;
 import com.example.mss.infrastructure.constants.RETURN_TP;
 import com.example.mss.infrastructure.entity.ResponseBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * packageName  : com.example.mss.application.product.web
@@ -91,219 +85,80 @@ public class ProductRestController {
         }
     }
 
-    public ResponseBase<Object> checkExecute(ProductRequest pRequest) {
-        switch (pRequest.getCrudCd()) {
-            case CREATE -> { return this.entityAdd(pRequest);}
-            case UPDATE -> { return this.entityUpdate(pRequest);}
-            case DELETE -> { return this.entityDelete(pRequest);}
+    /**
+     *  브랜드 및 상품을 추가/업데이트/삭제 하는 API
+     *  - 요청 : Request Body JSON
+     *
+     */
+    @PostMapping("/xpi/v1/mss/{crudType}/{task}")
+    public ResponseBase<Object> entityCrud(
+            @PathVariable  String crudType,
+            @PathVariable String task,
+            @RequestBody CrudRequest cRequest) {
+
+        if (!isValidEnum(CrudCd.class, crudType))
+            return ResponseBase.of(RETURN_TP.FAIL, "invalid crud type: " + crudType);
+
+        if (!isValidEnum(TaskCd.class, task))
+            return ResponseBase.of(RETURN_TP.FAIL, "invalid task type: " + crudType);
+
+        return performEntityCrud(CrudCd.valueOf(crudType), task, cRequest);
+    }
+
+    private ResponseBase<Object> performEntityCrud(CrudCd crudCd, String task, CrudRequest cRequest) {
+        // check crdType
+        switch (crudCd) {
+            case add -> { return entityCrudAdd(TaskCd.valueOf(task), cRequest); }
+            case fetch -> { return entityCrudFetch(TaskCd.valueOf(task), cRequest); }
+            case del -> { return entityCrudDel(TaskCd.valueOf(task), cRequest); }
             default -> {
-                return ResponseBase.of(RETURN_TP.FAIL, "제공하지 않는 CrudCd 입니다. [" + pRequest.getCrudCd() + "]");
+                return ResponseBase.of(RETURN_TP.FAIL, "Unknow Error : [" + cRequest.toString() + "]");
             }
         }
     }
 
-    /**
-     *  브랜드 및 상품을 추가/업데이트/삭제 하는 API
-     *  - 요청 : Request Body JSON
-     *  ㄴ. 추가
-     *
-     */
-    @PostMapping("/xpi/v1/mss/entity-excute")
-    public ResponseBase<Object> entityAdd(@RequestBody ProductRequest pRequest) {
-        // pRequest null 처리
-        if (!CrudCd.CREATE.equals(pRequest.getCrudCd())) {
-            return checkExecute(pRequest);
+    public static <T extends Enum<T>> boolean isValidEnum(Class<T> enumClass, String enumValue) {
+        if (enumValue == null) {
+            return false;
         }
 
-        if (pRequest.getBrand() == null && pRequest.getProduct() == null)
-            return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[request null] [" + pRequest.toString() + "]");
         try {
-            // ? 브랜드명이나 상품명이 같을 수 있나?
-            var pResponse = ProductResponse.builder()
-                                        .crudCd(pRequest.getCrudCd())
-                                        .build();
-            if (pRequest.getBrand() != null) {
-                pRequest.getBrand().setBrandId(null);
-                pRequest.getBrand().setCompanyId(1L);
-                pRequest.getBrand().setStatus(Status.OK);
-
-                var sBrandDto = brandService.saveItem(pRequest.getBrand());
-                pResponse.setBrand(sBrandDto);
-            }
-
-            if (pRequest.getProduct() != null) {
-                var fnBrand = brandService.getBrandByName(pRequest.getProduct().getBrandName());
-                var fnCategory = categoryService.getCategoriesByCategoryDesc(pRequest.getProduct().getCategoryName()).stream().findFirst().orElse(null);
-
-                if (fnBrand == null)
-                    fnBrand = brandService.saveItem(BrandDto.builder().brandName(pRequest.getProduct().getBrandName()).companyId(1L).build());
-
-                if (fnCategory == null)
-                    fnCategory = categoryService.saveItem(CategoryDto.builder().categoryDesc(pRequest.getProduct().getCategoryName()).categoryName(pRequest.getProduct().getCategoryName()).build());
-
-                var productDto = ProductsDto.builder()
-                                        .productId(null)
-                                        .productName(pRequest.getProduct().getProductName())
-                                        .brandId(fnBrand.getBrandId())
-                                        .categoryId(fnCategory.getCategoryId())
-                                        .status(Status.OK)
-                                        .price(pRequest.getProduct().getPrice()).build();
-
-                var sProductsDto = productsService.saveItem(productDto);
-                pResponse.setProduct(sProductsDto);
-            }
-
-            return ResponseBase.of(RETURN_TP.OK, Map.of("request", pRequest, "response", pResponse));
-        } catch (Exception e) {
-            return ResponseBase.of(RETURN_TP.FAIL, e.getMessage());
+            Enum.valueOf(enumClass, enumValue);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 
-    /**
-     *  브랜드 및 상품을 추가/업데이트/삭제 하는 API
-     *  - 요청 : Request Body JSON
-     *  ㄴ. 업데이트
-     *
-     */
-    @PutMapping("/xpi/v1/mss/entity-excute")
-    public ResponseBase<Object> entityUpdate(@RequestBody ProductRequest pRequest) {
-        // pRequest null 처리
-        if (!CrudCd.UPDATE.equals(pRequest.getCrudCd())) {
-            return checkExecute(pRequest);
-        }
-
-        if (pRequest.getBrand() == null && pRequest.getProduct() == null)
-            return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요.. [" + pRequest.toString() + "]");
-        try {
-            // 상품 삭제는 괜찮을 것 같은데, 브랜드를 삭제 하면 관련 상품들은 모두 삭제 해야 하는가?
-            var pResponse = ProductResponse.builder()
-                    .crudCd(pRequest.getCrudCd())
-                    .build();
-
-            if (pRequest.getBrand() != null) {
-                if (pRequest.getBrand().getBrandId() == null)
-                    return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요(brand key is null).. [" + pRequest.getBrand() + "]");
-
-                BrandDto fBrandDto = brandService.getBrandById(pRequest.getBrand().getBrandId());
-
-                // 요청 객체를 읽어 들인 객체에 업데이트 한다.
-                copyNonNullProperties(pRequest.getBrand(), fBrandDto);
-
-                // 업데이트 본을 저장 요청 한다,
-                var sBrandDto = brandService.saveItem(fBrandDto);
-                pResponse.setBrand(sBrandDto);
+    private ResponseBase<Object> entityCrudAdd(TaskCd taskCd, CrudRequest cRequest) {
+        switch (taskCd) {
+            case brand -> { return brandService.resBrandAdd(cRequest); }
+            case product -> { return productsService.resProductAdd(cRequest, brandService, categoryService); }
+            default -> {
+                return ResponseBase.of(RETURN_TP.FAIL, "Unknow Error : [ " + cRequest + "]");
             }
-
-            if (pRequest.getProduct() != null) {
-                if (pRequest.getProduct().getProductId() == null)
-                    return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요(product key is null).. [" + pRequest.getProduct() + "]");
-
-                var fnBrand = brandService.getBrandByName(pRequest.getProduct().getBrandName());
-                var fnCategory = categoryService.getCategoriesByCategoryDesc(pRequest.getProduct().getCategoryName()).stream().findFirst().orElse(null);
-
-                // 신규 등록
-                if (fnBrand == null)
-                    fnBrand = brandService.saveInitBrands(List.of(BrandDto.builder().brandName(pRequest.getProduct().getBrandName()).companyId(1L).build()))
-                                            .stream().findFirst().orElse(null);
-
-                if (fnCategory == null)
-                    fnCategory = categoryService.saveInitCategories(List.of(CategoryDto.builder().categoryName(pRequest.getProduct().getCategoryName()).build()))
-                                            .stream().findFirst().orElse(null);
-
-                if (fnBrand == null || fnCategory == null)
-                    return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요(브랜드/카테고리 신규등록 실패).. [" + pRequest.getProduct() + "]");
-
-                var productNm = null == pRequest.getProduct().getProductName()? fnCategory.getCategoryDesc(): pRequest.getProduct().getProductName();
-
-                ProductsDto fProductDto = productsService.getProductsBYId(pRequest.getProduct().getProductId());
-                ProductsDto nProductDto = ProductsDto.builder()
-                                                    .productId(fProductDto.getProductId())
-                                                    .brandId(fnBrand.getBrandId())
-                                                    .categoryId(fnCategory.getCategoryId())
-                                                    .productName(productNm)
-                                                    .price(pRequest.getProduct().getPrice())
-                                                    .build();
-
-                // 요청 객체를 읽어 들인 객체에 업데이트 한다.
-                copyNonNullProperties(nProductDto, fProductDto);
-
-                // 업데이트 본을 저장 요청 한다,
-                var sProductsDto = productsService.saveItem(fProductDto);
-                pResponse.setProduct(sProductsDto);
-            }
-
-            return ResponseBase.of(RETURN_TP.OK, Map.of("request", pRequest, "response", pResponse));
-        } catch (Exception e) {
-            return ResponseBase.of(RETURN_TP.FAIL, e.getMessage());
         }
     }
 
-    /**
-     *  브랜드 및 상품을 추가/업데이트/삭제 하는 API
-     *  - 요청 : Request Body JSON
-     *  ㄴ. 삭제
-     *
-     */
-    @DeleteMapping("/xpi/v1/mss/entity-excute")
-    public ResponseBase<Object> entityDelete(@RequestBody ProductRequest pRequest) {
-        // pRequest null 처리
-        if (!CrudCd.DELETE.equals(pRequest.getCrudCd())) {
-            return checkExecute(pRequest);
-        }
-        if (pRequest.getBrand() == null && pRequest.getProduct() == null)
-            return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요.. [" + pRequest.toString() + "]");
-        try {
-            // 상품 삭제는 괜찮을 것 같은데, 브랜드를 삭제 하면 관련 상품들은 모두 삭제 해야 하는가?
-            var pResponse = ProductResponse.builder()
-                    .crudCd(pRequest.getCrudCd())
-                    .build();
-            if (pRequest.getBrand() != null) {
-                if (pRequest.getBrand().getBrandId() == null)
-                    return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요(brand key is null).. [" + pRequest.getBrand() + "]");
-
-                BrandDto fBrandDto = brandService.getBrandById(pRequest.getBrand().getBrandId());
-                pResponse.getBrand().setStatus(Status.DELETE);
-
-                // 요청 객체를 읽어 들인 객체에 업데이트 한다.
-                copyNonNullProperties(pRequest.getBrand(), fBrandDto);
-
-                // 업데이트 본을 저장 요청 한다,
-                var sBrandDto = brandService.saveItem(fBrandDto);
-                productsService.setProductsStatusByBrandId(sBrandDto.getBrandId(), sBrandDto.getStatus());
-                pResponse.setBrand(sBrandDto);
+    private ResponseBase<Object> entityCrudFetch(TaskCd taskCd, CrudRequest cRequest) {
+        switch (taskCd) {
+            case brand -> { return brandService.resBrandUpdate(cRequest); }
+            case product -> { return productsService.resProductUpdate(cRequest, brandService, categoryService); }
+            default -> {
+                return ResponseBase.of(RETURN_TP.FAIL, "Unknow Error : [ " + cRequest + "]");
             }
-
-            if (pRequest.getProduct() != null) {
-                if (pRequest.getProduct().getProductId() == null)
-                    return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요(product key is null).. [" + pRequest.getBrand() + "]");
-
-                // 상태 delete 를 요청 한다,
-                productsService.setProductsStatusByProductId(pRequest.getProduct().getProductId(), Status.DELETE);
-            }
-
-            return ResponseBase.of(RETURN_TP.OK, Map.of("request", pRequest, "response", pResponse));
-        } catch (Exception e) {
-            return ResponseBase.of(RETURN_TP.FAIL, e.getMessage());
         }
     }
 
-    public static void copyNonNullProperties(Object source, Object target) {
-        Arrays.stream(BeanUtils.getPropertyDescriptors(source.getClass()))
-                .forEach(propertyDescriptor -> {
-                    try {
-                        Method readMethod = propertyDescriptor.getReadMethod();
-                        if (readMethod != null) {
-                            Object value = readMethod.invoke(source);
-                            if (value != null) {
-                                Method writeMethod = propertyDescriptor.getWriteMethod();
-                                if (writeMethod != null) {
-                                    writeMethod.invoke(target, value);
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        log.info("copyNonNullProperties error!!", e);
-                    }
-                });
+    private ResponseBase<Object> entityCrudDel(TaskCd taskCd, CrudRequest cRequest) {
+        switch (taskCd) {
+            case brand -> {
+                cRequest.getBrand().setStatus(Status.DELETE);
+                return brandService.resBrandUpdate(cRequest); }
+            case product -> { return productsService.resProductDelete(cRequest);}
+            default -> {
+                return ResponseBase.of(RETURN_TP.FAIL, "Unknow Error : [ " + cRequest + "]");
+            }
+        }
     }
 }

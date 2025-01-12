@@ -5,6 +5,10 @@ import com.example.mss.application.brand.dto.BrandDto;
 import com.example.mss.application.brand.entitiy.Brand;
 import com.example.mss.application.common.dto.Constants;
 import com.example.mss.application.common.dto.Status;
+import com.example.mss.application.product.dto.CrudRequest;
+import com.example.mss.application.util.MssClassUtil;
+import com.example.mss.infrastructure.constants.RETURN_TP;
+import com.example.mss.infrastructure.entity.ResponseBase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -70,5 +74,46 @@ public class BrandService {
     public BrandDto getBrandByName(String brandName) {
         Brand fBrand = brandDao.findBrandByBrandName(brandName);
         return null == fBrand? null: modelMapper.map(fBrand, BrandDto.class);
+    }
+
+    public ResponseBase<Object> resBrandAdd(CrudRequest cRequest) {
+        if (cRequest.getBrand() == null)
+            return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[brand null]");
+
+        var brandDto = BrandDto.builder()
+                        .companyId(1L)
+                        .brandName(cRequest.getBrand().getBrandName())
+                        .build();
+        try {
+            var sBrandDto = this.saveItem(brandDto);
+            return ResponseBase.of(RETURN_TP.OK, sBrandDto);
+        } catch(Exception e) {
+            return ResponseBase.of(RETURN_TP.FAIL, e.getMessage());
+        }
+    }
+
+    public ResponseBase<Object> resBrandUpdate(CrudRequest cRequest) {
+        if (cRequest.getBrand() == null)
+            return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[brand null]");
+
+        BrandDto fBrandDto = this.getBrandById(cRequest.getBrand().getBrandId());
+        if (fBrandDto == null)
+            return ResponseBase.of(RETURN_TP.FAIL, "JSON 전달 객체를 확인해 주세요..[find brand empty]");
+
+        var nBrandDto = BrandDto.builder()
+                .brandId(cRequest.getBrand().getBrandId())
+                .companyId(1L)
+                .brandName(cRequest.getBrand().getBrandName())
+                .status(cRequest.getBrand().getStatus())
+                .build();
+
+        MssClassUtil.copyNonNullProperties(nBrandDto, fBrandDto);
+
+        try {
+            var sBrandDto = this.saveItem(fBrandDto);
+            return ResponseBase.of(RETURN_TP.OK, sBrandDto);
+        } catch(Exception e) {
+            return ResponseBase.of(RETURN_TP.FAIL, e.getMessage());
+        }
     }
 }

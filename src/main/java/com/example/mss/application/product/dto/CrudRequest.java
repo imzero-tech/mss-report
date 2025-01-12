@@ -1,6 +1,6 @@
 package com.example.mss.application.product.dto;
 
-import com.example.mss.application.common.dto.Status;
+import com.example.mss.application.brand.dto.BrandDto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.Data;
 
 /**
  * packageName  : com.example.mss.application.product.dto
- * fileName     : ProductItem
+ * fileName     : CrudRequest
  * auther       : imzero-tech
  * date         : 2025. 1. 12.
  * descriptuon  :
@@ -20,11 +20,7 @@ import lombok.Data;
 @Builder
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProductItem {
-    private Long productId;
-    private String productName;
-    private String brandName;
-    private String categoryName;
-    private Integer price;
-    private Status status;
+public class CrudRequest {
+    private BrandDto brand;
+    private ProductItem product;
 }
