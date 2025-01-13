@@ -1,7 +1,20 @@
 {% extends "layouts/adminDefault" %}
 
 {% block script %}
-
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script>
+    $(function () {
+        $('#app-board-grid').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+</script>
 {% endblock %}
 
 {% block content %}
@@ -17,18 +30,18 @@
 <section class="content container-fluid">
     <div class="row col-md-12 col-lg-10">
         <div class="box box-primary">
-            <div class="box">
-                <div class="box-body">
+            <div class="card">
+                <div class="card-body">
                     <!-- 등록 현황 Grid -->
-                    <table id="app-board-grid" class="display table table-bordered table-striped table-hover">
+                    <table id="app-board-grid" class="table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th style="width:100px">NO</th>
-                            <th style="width:250px">브랜드명</th>
-                            <th style="width:250px">회사명</th>
-                            <th style="width:100px">상태</th>
-                            <th style="width:250px">수정일</th>
-                            <th style="width:250px">등록일</th>
+                            <th >NO</th>
+                            <th >브랜드명</th>
+                            <th >회사명</th>
+                            <th >상태</th>
+                            <th >수정일</th>
+                            <th >등록일</th>
                         </tr>
                         </thead>
                         <tbody>
