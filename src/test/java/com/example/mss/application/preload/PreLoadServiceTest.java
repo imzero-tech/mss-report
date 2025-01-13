@@ -6,6 +6,7 @@ import com.example.mss.application.company.service.CompanyService;
 import com.example.mss.application.product.service.ProductsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonComponentModule;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,6 +33,8 @@ public class PreLoadServiceTest {
     private CategoryService categoryService;
     @Autowired
     private ProductsService productsService;
+    @Autowired
+    private JsonComponentModule jsonComponentModule;
 
     @Test
     void contextLoads() {
@@ -39,6 +42,7 @@ public class PreLoadServiceTest {
         assertThat(brandService).isNotNull();
         assertThat(categoryService).isNotNull();
         assertThat(productsService).isNotNull();
+
     }
 
 }

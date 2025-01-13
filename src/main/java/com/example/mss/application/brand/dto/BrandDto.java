@@ -1,6 +1,7 @@
 package com.example.mss.application.brand.dto;
 
 import com.example.mss.application.common.dto.Status;
+import com.example.mss.application.company.dto.CompanyDto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * packageName  : com.example.mss.application.brand.dto
@@ -33,4 +35,6 @@ public class BrandDto {
     private Status status;
     private Instant crtDt;
     private Instant updDt;
+
+    private List<CompanyDto> company;
 }

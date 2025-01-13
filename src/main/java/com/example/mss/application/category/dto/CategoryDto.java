@@ -1,5 +1,6 @@
 package com.example.mss.application.category.dto;
 
+import com.example.mss.application.brand.dto.BrandDto;
 import com.example.mss.application.common.dto.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +31,6 @@ public class CategoryDto {
     private Status status;
     private Instant crtDt;
     private Instant updDt;
+
+    private BrandDto brand;
 }

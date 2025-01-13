@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.mss.application.common.dto.Status.*;
 import static com.example.mss.application.util.MssClassUtil.copyNonNullProperties;
 
 /**
@@ -58,6 +59,12 @@ public class BrandService {
         Brand brand = modelMapper.map(brandDto, Brand.class);
         Brand fBrand = brandDao.saveAndFlush(brand);
         return modelMapper.map(fBrand, BrandDto.class);
+    }
+    public List<BrandDto> getBrandAll() {
+        return brandDao.findByStatusIn(List.of(OK, READY, BLIND, STOP, DELETE))
+                .stream()
+                .map(dest -> modelMapper.map(dest, BrandDto.class))
+                .toList();
     }
 
     public List<BrandDto> getBrandByStatus(Status status) {
