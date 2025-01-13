@@ -1,7 +1,7 @@
 {% extends "layouts/adminDefault" %}
 
 {% block script %}
-
+{% include "admin/search/common/srchDataTable" %}
 {% endblock %}
 
 {% block content %}
@@ -17,8 +17,8 @@
 <section class="content container-fluid">
     <div class="row col-md-12 col-lg-10">
         <div class="box box-primary">
-            <div class="box">
-                <div class="box-body">
+            <div class="card">
+                <div class="card-body">
                     <!-- 등록 현황 Grid -->
                     <table id="app-board-grid" class="display table table-bordered table-striped table-hover">
                         <thead>
@@ -34,13 +34,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for product in products %}
+                        {% for product in adminProducts %}
                         <tr>
                             <td>{{product.productId}}</td>
                             <td>{{product.productName}}</td>
-                            <td>{{product.brandId}}</td>
-                            <td>{{product.categoryId}}</td>
-                            <td></td>
+                            <td>{{product.brandName}}</td>
+                            <td>{{product.categoryDesc}}</td>
+                            <td>{{product.companyName}}</td>
                             <td>{{product.price}}</td>
                             <td>{{product.updDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
                             <td>{{product.crtDt | date("yyyy-MM-dd HH:mm:ss")}}</td>

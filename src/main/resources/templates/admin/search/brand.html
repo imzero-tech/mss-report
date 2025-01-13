@@ -1,20 +1,7 @@
 {% extends "layouts/adminDefault" %}
 
 {% block script %}
-<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
-<script>
-    $(function () {
-        $('#app-board-grid').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
-</script>
+{% include "admin/search/common/srchDataTable" %}
 {% endblock %}
 
 {% block content %}
@@ -33,7 +20,7 @@
             <div class="card">
                 <div class="card-body">
                     <!-- 등록 현황 Grid -->
-                    <table id="app-board-grid" class="table table-bordered table-hover">
+                    <table id="app-board-grid" class="display table table-bordered table-striped table-hover">
                         <thead>
                         <tr>
                             <th >NO</th>
@@ -45,11 +32,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for brand in brands %}
+                        {% for brand in adminBrands %}
                         <tr>
                             <td>{{brand.brandId}}</td>
                             <td>{{brand.brandName}}</td>
-                            <td>{{brand.companyId}}</td>
+                            <td>{{brand.companyName}}</td>
                             <td>{{brand.status}}</td>
                             <td>{{brand.updDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
                             <td>{{brand.crtDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
