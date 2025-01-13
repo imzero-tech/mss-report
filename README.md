@@ -61,7 +61,122 @@ api
       + add(추가), fetch(수정), del(삭제)
     + {task}
       + brand(브랜드명), product(상품명)
-  + input - jsonbody
+      + input - jsonbody
+        + brand
+          + add/brand  
+            + url - http://localhost:8081/xpi/v1/mss/add/brand
+            + method : POST
+        ~~~
+        // json 요청 값
+        {
+            "brand": {
+                  "brand_name" : "Z1"
+             }
+        }
+        ~~~
+          + fetch/brand   
+            + url - http://localhost:8081/xpi/v1/mss/fetch/brand
+            + method : POST
+        ~~~
+        // json 요청 값
+        {
+            "brand": {
+                  "brand_id" : 11, 
+                  "brand_name" : "Z12"
+             }
+        }
+        ~~~
+          + del/brand   
+            + url - http://localhost:8081/xpi/v1/mss/del/brand
+            + method : POST
+            + DB 삭제는 하지 않고, Status = DELETE 로 변경하여 관리 (상품 판매 후 브랜드 삭제 됐을 경우 히스토리 관리 측면으로 확장해 봄)
+        ~~~
+        // json 요청 값
+        {
+            "brand": {
+                  "brand_id" : 11
+             }
+        }
+        ~~~
+        + product
+          + add/product
+            + url = http://localhost:8081/xpi/v1/mss/add/product
+            + method : POST
+        ~~~
+        // json 요청 값 
+        {
+            "product": {
+                "product_name" : "싼 비니",
+                "brand_name": "Z12",
+                "category_name": "비니",
+                "price": 700
+                }
+        }
+        ~~~
+        ~~~
+        // curl 요청 값
+        curl --location 'http://localhost:8081/xpi/v1/mss/add/product' \
+             --header 'Content-Type: application/json' \
+             --data '{
+                  "product": {
+                  "product_name" : "싼 비니",
+                  "brand_name": "Z12",
+                  "category_name": "비니",
+                  "price": 700
+                  }
+              }'
+        ~~~
+        + fetch/product
+          + url = http://localhost:8081/xpi/v1/mss/fetch/product
+          + method : POST
+        ~~~
+        // json 요청 값 
+        {
+            "product": {
+                "product_id": 74,
+                "product_name" : "비싼 비니",
+                "brand_name": "Z12",
+                "category_name": "비니",
+                "price": 10700
+                }
+        }
+        ~~~
+        ~~~
+        // curl 요청 값
+        curl --location 'http://localhost:8081/xpi/v1/mss/fetch/product' \
+             --header 'Content-Type: application/json' \
+             --data '{
+                  "product": {
+                      "product_id": 74,
+                      "product_name" : "비싼 비니",
+                      "brand_name": "Z12",
+                      "category_name": "비니",
+                      "price": 10700
+                  }
+              }'
+        ~~~
+        + del/product
+          + url = http://localhost:8081/xpi/v1/mss/del/product
+          + method : POST
+          + DB 삭제는 하지 않고, Status = DELETE 로 변경하여 관리 (상품 판매 후 브랜드 삭제 됐을 경우 히스토리 관리 측면으로 확장해 봄)
+        ~~~
+        // json 요청 값
+        {
+            "product": {
+                "product_id": 74
+            }
+        }
+        ~~~
+        ~~~
+        // curl 요청 값
+        curl --location 'http://localhost:8081/xpi/v1/mss/del/product' \
+             --header 'Content-Type: application/json' \
+             --data '{
+                  "product": {
+                      "product_id": 74
+                  }
+              }'
+        ~~~
 
   
 ## 기타 추가 정보
@@ -79,4 +194,5 @@ api
 
 ### 관리 페이지
 + http://localhost:8081/admin
-+ 구현중
++ 상품조회, 브랜드조회, 카테고리조회, 회사조회 > 수정 기능은 구현하지 않음
+  + AdminLte, DataTable

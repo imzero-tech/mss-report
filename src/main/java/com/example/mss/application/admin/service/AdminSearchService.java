@@ -94,10 +94,17 @@ public class AdminSearchService {
         products.forEach(product -> {
             var brandDto = brands.stream().filter(b -> b.getBrandId().equals(product.getBrandId())).findFirst().orElse(null);
 
-            assert brandDto != null;
-            var brandName = brandDto.getBrandName();
+            var brandName = UNKNOWN;
+            var companyName = UNKNOWN;
+
+            if (brandDto != null) {
+                brandName = brandDto.getBrandName();
+                companyName = compines.stream().filter(c -> c.getCompanyId().equals(brandDto.getCompanyId())).map(CompanyDto::getCompanyName).findFirst().orElse(UNKNOWN);
+            } else {
+                log.info(">>>> {}", product);
+            }
+
             var categoryDesc = categories.stream().filter( c -> c.getCategoryId().equals(product.getCategoryId())).map(CategoryDto::getCategoryDesc).findFirst().orElse(UNKNOWN);
-            var companyName = compines.stream().filter(c -> c.getCompanyId().equals(brandDto.getCompanyId())).map(CompanyDto::getCompanyName).findFirst().orElse(UNKNOWN);
 
             AdminProductDto adminProductDto = modelMapper.map(product, AdminProductDto.class);
             adminProductDto.setBrandName(brandName);

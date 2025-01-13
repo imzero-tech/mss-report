@@ -10,6 +10,7 @@ import com.example.mss.application.product.dto.TaskCd;
 import com.example.mss.application.product.service.ProductsService;
 import com.example.mss.infrastructure.constants.RETURN_TP;
 import com.example.mss.infrastructure.entity.ResponseBase;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -97,11 +98,11 @@ public class ProductRestController {
             @RequestBody CrudRequest cRequest) {
 
         // crudType 항목 체크
-        if (!isValidEnum(CrudCd.class, crudType))
+        if (StringUtils.isEmpty(crudType) || !isValidEnum(CrudCd.class, crudType))
             return ResponseBase.of(RETURN_TP.FAIL, "invalid crud type: " + crudType);
 
         // task 항목 체크
-        if (!isValidEnum(TaskCd.class, task))
+        if (StringUtils.isEmpty(task) || !isValidEnum(TaskCd.class, task))
             return ResponseBase.of(RETURN_TP.FAIL, "invalid task type: " + crudType);
 
         return performEntityCrud(CrudCd.valueOf(crudType), task, cRequest);
