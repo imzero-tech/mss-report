@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.mss.application.common.dto.Status.*;
 import static com.example.mss.application.util.MssClassUtil.copyNonNullProperties;
 
 /**
@@ -69,6 +70,13 @@ public class ProductsService {
         Products products = modelMapper.map(productsDto, Products.class);
         Products fproducts = productsDao.saveAndFlush(products);
         return modelMapper.map(fproducts, ProductsDto.class);
+    }
+
+    public List<ProductsDto> getProductsAll() {
+        return productsDao.findByStatusIn(List.of(OK, READY, BLIND, STOP, DELETE))
+                .stream()
+                .map(dest -> modelMapper.map(dest, ProductsDto.class))
+                .toList();
     }
 
     public Map<String, Object> lowestPriceList() {

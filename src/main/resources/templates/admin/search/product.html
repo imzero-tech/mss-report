@@ -23,6 +23,7 @@
                     <table id="app-board-grid" class="display table table-bordered table-striped table-hover">
                         <thead>
                         <tr>
+                            <th>NO</th>
                             <th>상품명</th>
                             <th>브랜드명</th>
                             <th>카테고리명</th>
@@ -33,15 +34,18 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% for product in products %}
                         <tr>
-                            <td>productNm</td>
-                            <td>brandNm</td>
-                            <td>categoryNm</td>
-                            <td>companyNm</td>
-                            <td>price</td>
-                            <td>updDT</td>
-                            <td>crtDT</td>
+                            <td>{{product.productId}}</td>
+                            <td>{{product.productName}}</td>
+                            <td>{{product.brandId}}</td>
+                            <td>{{product.categoryId}}</td>
+                            <td></td>
+                            <td>{{product.price}}</td>
+                            <td>{{product.updDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
+                            <td>{{product.crtDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
                         </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>

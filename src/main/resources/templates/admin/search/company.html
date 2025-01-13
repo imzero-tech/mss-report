@@ -31,13 +31,15 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% for com in compines %}
                         <tr>
-                            <td>companyId</td>
-                            <td>companyNm</td>
-                            <td>status</td>
-                            <td>updDT</td>
-                            <td>crtDt</td>
+                            <td>{{com.companyId}}</td>
+                            <td>{{com.companyName}}</td>
+                            <td>{{com.status}}</td>
+                            <td>{{com.updDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
+                            <td>{{com.crtDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
                         </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>

@@ -60,6 +60,7 @@ public class BrandService {
         Brand fBrand = brandDao.saveAndFlush(brand);
         return modelMapper.map(fBrand, BrandDto.class);
     }
+
     public List<BrandDto> getBrandAll() {
         return brandDao.findByStatusIn(List.of(OK, READY, BLIND, STOP, DELETE))
                 .stream()

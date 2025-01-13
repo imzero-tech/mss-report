@@ -1,7 +1,5 @@
 package com.example.mss.application.category.service;
 
-import com.example.mss.application.brand.dto.BrandDto;
-import com.example.mss.application.brand.entitiy.Brand;
 import com.example.mss.application.category.dao.CategoryDao;
 import com.example.mss.application.category.dto.CategoryDto;
 import com.example.mss.application.category.entity.Category;
@@ -14,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.example.mss.application.common.dto.Status.*;
 
 /**
  * packageName  : com.example.mss.application.category.service
@@ -55,6 +55,13 @@ public class CategoryService {
         Category category = modelMapper.map(categoryDto, Category.class);
         Category fcategory = categoryDao.saveAndFlush(category);
         return modelMapper.map(fcategory, CategoryDto.class);
+    }
+
+    public List<CategoryDto> getCategoryAll() {
+        return categoryDao.findByStatusIn(List.of(OK, READY, BLIND, STOP, DELETE))
+                .stream()
+                .map(dest -> modelMapper.map(dest, CategoryDto.class))
+                .toList();
     }
 
     public List<CategoryDto> getCategoriesByStatus(Status status) {

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.mss.application.common.dto.Status.*;
+
 /**
  * packageName  : com.example.mss.application.company.service
  * fileName     : CompanyService
@@ -34,6 +36,13 @@ public class CompanyService {
                     companyDtos.stream()
                             .map(o -> modelMapper.map(o, Company.class))
                             .toList())
+                .stream()
+                .map(dest -> modelMapper.map(dest, CompanyDto.class))
+                .toList();
+    }
+
+    public List<CompanyDto> getCategoryAll() {
+        return companyDao.findByStatusIn(List.of(OK, READY, BLIND, STOP, DELETE))
                 .stream()
                 .map(dest -> modelMapper.map(dest, CompanyDto.class))
                 .toList();

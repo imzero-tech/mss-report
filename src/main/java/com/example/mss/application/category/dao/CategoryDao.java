@@ -22,4 +22,5 @@ import java.util.List;
 public interface CategoryDao extends JpaRepository<Category, Long> {
     List<Category> findCategoriesByStatus(Status status);
     List<Category> findCategoriesByCategoryDesc(String categoryDesc);
+    List<Category> findByStatusIn(List<Status> statuses);
 }

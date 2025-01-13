@@ -2,6 +2,7 @@ package com.example.mss.application.admin.web;
 
 import com.example.mss.application.admin.service.AdminSearchService;
 import com.example.mss.application.common.dto.AdminSearchKind;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -41,12 +42,11 @@ public class WwwAdminController {
     @GetMapping(value ="/search/{kind}" )
     private ModelAndView searchView(ModelAndView mnv, @PathVariable String kind) {
         // 잘못된 접근 처리
-        if (!isValidEnum(AdminSearchKind.class, kind)) {
+        if (StringUtils.isEmpty(kind) || !isValidEnum(AdminSearchKind.class, kind)) {
             mnv.setViewName("admin/index");
             return mnv;
         }
 
-        mnv.setViewName("admin/search/" + kind);
         return adminSearchService.searchListAll(mnv, AdminSearchKind.valueOf(kind));
     }
 }

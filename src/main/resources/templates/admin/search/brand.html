@@ -23,23 +23,25 @@
                     <table id="app-board-grid" class="display table table-bordered table-striped table-hover">
                         <thead>
                         <tr>
-                            <th>NO</th>
-                            <th>브랜드명</th>
-                            <th>회사명</th>
-                            <th>상태</th>
-                            <th>수정일</th>
-                            <th>등록일</th>
+                            <th style="width:100px">NO</th>
+                            <th style="width:250px">브랜드명</th>
+                            <th style="width:250px">회사명</th>
+                            <th style="width:100px">상태</th>
+                            <th style="width:250px">수정일</th>
+                            <th style="width:250px">등록일</th>
                         </tr>
                         </thead>
                         <tbody>
+                        {% for brand in brands %}
                         <tr>
-                            <td>brandNo</td>
-                            <td>brandNm</td>
-                            <td>companyNm</td>
-                            <td>status</td>
-                            <td>updDt</td>
-                            <td>crtDt</td>
+                            <td>{{brand.brandId}}</td>
+                            <td>{{brand.brandName}}</td>
+                            <td>{{brand.companyId}}</td>
+                            <td>{{brand.status}}</td>
+                            <td>{{brand.updDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
+                            <td>{{brand.crtDt | date("yyyy-MM-dd HH:mm:ss")}}</td>
                         </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>

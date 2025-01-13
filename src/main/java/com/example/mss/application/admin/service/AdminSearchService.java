@@ -33,6 +33,7 @@ public class AdminSearchService {
 
     public ModelAndView searchListAll(ModelAndView mnv, AdminSearchKind adminSearchKind) {
 
+        mnv.setViewName("admin/search/" + adminSearchKind);
         return switch(adminSearchKind) {
             case brand -> brandListAll(mnv);
             case category -> categoryListAll(mnv);
@@ -48,14 +49,20 @@ public class AdminSearchService {
     }
 
     private ModelAndView categoryListAll(ModelAndView mnv) {
+        var categories = categoryService.getCategoryAll();
+        mnv.addObject("categories", categories);
         return mnv;
     }
 
     private ModelAndView companyListAll(ModelAndView mnv) {
+        var compines = companyService.getCategoryAll();
+        mnv.addObject("compines", compines);
         return mnv;
     }
 
     private ModelAndView productListAll(ModelAndView mnv) {
+        var products = productsService.getProductsAll();
+        mnv.addObject("products", products);
         return mnv;
     }
 }
