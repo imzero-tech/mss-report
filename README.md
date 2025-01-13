@@ -16,11 +16,7 @@
 - BRAND : 브랜드 정보 관리
 - CATEGORY : 판매 상품 관리 (카테고리)
 - COMPANY : 브랜들 보유한 회사정보 (현재는 MSS)
-- PRODUCTS : 판매 상품을 관리하며 BRAND_ID/ CATEGORY_ID 를 통해 상세 정보를 알수 있도록 구현 
-
-~~~
-
-~~~
+- PRODUCTS : 판매 상품을 관리하며 BRAND_ID/ CATEGORY_ID 를 통해 상세 정보를 알수 있도록 구현
 
 ## 코드 빌드, 테스트, 실행 방법
 ### 코드 빌드 
